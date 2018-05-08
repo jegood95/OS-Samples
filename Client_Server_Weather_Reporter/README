@@ -1,0 +1,40 @@
+/* jegood Joshua Good */
+
+Program Description:
+The programs p3_c.c and p3_s.c provide client and server functionality for an hourly temperature reporting server, respectively. p3_c.c allows a client to access the
+weather server and request one of the following: a)show the temperature for each city in the current hour, or b)report a temperature to be updated for a specified city.
+p3_s.c establishes a server for connection to up to five clients. The weather server processes requests made by connected clients and provides feedback upon success and
+failure. Any information updated by a client is reflected on all client's screens upon request.
+
+Compiling and Execution:
+** Pre - requisites: ensure "p3.c" and "Makefile" are situated within the same directory
+1. Clear any related pre - existing files using the "make clean" statement.
+2. Compile the program using "make".
+3. If using VCL, type "tmux" and hit "Enter". Hit "ctrl+b, shift+%" to generate two instances
+	 of the current session. This will be necessary for running at least one client and server.
+		- To create additional clients repeat "ctrl+b, shift+%" for the number of clients you wish to create.
+		- Note: use "ctrl+b, <right/left arrow key>" to navigate between session instances.
+4. On the first instance, run the server program using "./server <port>", where "port" is the server port for clients to connect
+			
+	 If the port number is not specified, the following usage message will be displayed:
+			
+			Usage: ./server <port>\n
+5. On all subsequent session instances, run the client program using "./client <ip> <port>", where "ip" is the ip address from which to connect and "port" is the server port to connect to.
+	 
+	 If either the "ip" or "port" fields are not specified, the client reports the following usage message:
+			
+			Usage: ./client <ip> <port>
+	 
+	 If both the server and client arguments are valid, each client will display ">", indicating the client program waits for user input. On input "s" or "S", the client requests the server
+	 to return the current temperatures for all cities ("RDU", "CLT", "ALT", "CHS", and "RIC"). The server receives the client's request, processes its message, and returns a string containing
+	 this information, displayed on the client's screen. On input "r" or "R", the client requests to report an updated temperature for a city within the current hour. A report echoes the following
+	 format:
+			"<cmd>:<city>:<hourstamp>:<temp>", where "cmd" is one of {r,R}, "city" is one of the five aforementioned city postal codes, "hourstamp" is the current hour in which the temperature is reported,
+			and "temp" is the temperature to report.
+	If the postal code is invalid, the server replies, "Error city code!". If the reported timestamp does not match the current hour, the server replies, "Error hourstamp!". Else, the server processes
+	the report in the following manner: a)if the reported temperature is the initial reported for the hour, overwrites the specified city's temperature with this temperature, b)if this temperature is not
+	the initial reported, averages all of the specified city's current hourly temperatures and assigns this value as the current temperature, c)if a temperature is reported when a new hour passes, resets
+	the specified city's hourly temperature to its default and performs option "a)". Once complete, the server replies to the client with "Successfully report temperature!". A client may freely
+	disconnect and reconnect to the server and request temperature information as long as the server is active. If the server deactivates and reactivates, a successfully reconnected client will only
+	see information reported to the server at that time, and all information previously on the server will be reset.
+	
